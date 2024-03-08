@@ -72,14 +72,6 @@ webAuth.changePassword({
 });
 ```
 
-## Contributing
-
-Contributions to this project are welcome. Please ensure that your code adheres to the project's coding standards and include appropriate tests.
-
 ## License
 
 This project is licensed under the MIT License.
-
----
-
-This README provides a basic overview of your project, including how to set it up and use it. You can expand each section with more detailed information as necessary, especially under the "Configuration" section, to provide specific instructions based on how your application is set up in Auth0.
