@@ -1,0 +1,6 @@
+{
+  "domain": "pse-addons.auth0.com",
+  "clientId": "YkmvMDkmKAXWgcldTyTGGjOLAuIIM376",
+  "audience" :"organise",
+  "scope" :"openid profile email read:calendar"
+}
