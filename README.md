@@ -1,6 +1,15 @@
-# Single Page Application (SPA) with Auth0 Authentication
+# SPA with embedded login form ( Using /co/authentication + SPA JS for PKCE)
 
-This project is a Single Page Application (SPA) that implements user authentication using Auth0. It includes features for user login, signup, and password reset.
+This project is a Single Page Application (SPA) that implements user authentication using Auth0. 
+
+### Implementation of Cross-Origin Authentication for Embedded Authenticaiton
+
+In this sample application, we've implemented Auth0's Cross-Origin Authentication to manage user authentication. This method is crucial for the embedded login form experience, especially when our application and the Auth0 server are on different domains ( this will only work on browsers that allow 3rd party cookies). Once the cross orign auth call is completed auth0 responds with a login_ticket and sets the cookies for sso in the response. 
+This is then passed as parameter to the auth0 spa js which uses this login_token in the /authorize call to auth0 along with PKCE. NOTE:In order to enforce that this application only supports login via PKCE you would have to disable other grant types such as **implicit** at the application level
+
+#### 1. User Login
+
+For the login functionality, the application posts the user's credentials to Auth0's `/co/authenticate` endpoint. This call returns a `login_ticket`, which is then used to build a URL for Auth0's `/authorize` endpoint using the auth0 spa js. The application then redirects the user to this URL, where Auth0 handles the authentication process. The `/co/authenticate` endpoint plays a vital role in our application. The response from this endpoint is crucial for proceeding with the authentication process.
 
 ## Features
 
@@ -13,34 +22,6 @@ This project is a Single Page Application (SPA) that implements user authenticat
 - Auth0 account and configuration (Domain, Client ID, etc.)
 - Web hosting or a local server environment (like Apache, Nginx, or equivalent)
 
-
-### Cross-Origin Authentication and Browser Compatibility
-
-#### Understanding Cross-Origin Authentication
-
-In this application, we utilize Auth0's Cross-Origin Authentication for functionalities like login, signup, and password change. Cross-Origin Authentication allows our application hosted on one domain to authenticate users against an Auth0 server on a different domain.
-
-#### Browser Behavior and 3rd Party Cookies
-
-One critical aspect to consider when implementing Cross-Origin Authentication is the handling of 3rd party cookies by different browsers. Cross-Origin Authentication relies heavily on 3rd party cookies. These cookies are set by the Auth0 server (a different domain than the application) and are essential for maintaining the authentication state and session information.
-
-However, many modern browsers have implemented stricter privacy controls that block or restrict 3rd party cookies by default. This change in browser behavior can impact the functionality of Cross-Origin Authentication:
-
-- **Browsers Blocking 3rd Party Cookies:** In browsers where 3rd party cookies are completely blocked, Cross-Origin Authentication might fail, as the browser will not store the cookies set by Auth0, leading to a broken authentication flow.
-- **Browsers with Limited 3rd Party Cookie Use:** Some browsers may allow limited use of 3rd party cookies under specific conditions, but this still poses a risk for inconsistent user experience and potential authentication issues.
-
-#### Recommended Use Cases
-
-Given these limitations, it is generally advisable to use Cross-Origin Authentication in situations where both the application and the Auth0 identity provider are hosted under the same Top-Level Domain (TLD). This configuration can effectively bypass the restrictions on 3rd party cookies, as the cookies set by Auth0 would be considered first-party cookies, leading to a more stable and consistent authentication experience.
-
-For instance, if your application is hosted at `app.example.com` and Auth0 is at `auth.example.com`, they share the same TLD (`example.com`), which is a favorable setup for Cross-Origin Authentication.
-
-#### Alternative Approaches
-
-In scenarios where hosting both the application and Auth0 under the same TLD is not feasible, consider alternative authentication methods that do not rely on 3rd party cookies. These methods might include:
-
-- **Universal Login:** Redirecting users to the Auth0 hosted login page (Universal Login) instead of using embedded login forms on your site. This approach circumvents the issues with 3rd party cookies, as the authentication takes place entirely within the Auth0 domain.
-
 ## Installation
 
 1. Clone the repository or download the source code.
@@ -49,7 +30,7 @@ In scenarios where hosting both the application and Auth0 under the same TLD is 
 
 ### Setting Up the Application in Auth0
 
-To ensure the seamless integration of our application with Auth0, certain configurations need to be set up in the Auth0 dashboard. These configurations include specifying callback URLs, logout URLs, web origins, CORS (Cross-Origin Resource Sharing), and Cross-Origin Authentication URLs. Below is a guide on how to set these up:
+To ensure the seamless integration of our application with Auth0, certain configurations need to be set up in the Auth0 dashboard. These configurations include specifying callback URLs, logout URLs, web origins, CORS (Cross-Origin Resource Sharing), and Cross-Origin Authentication URLs. 
 
 #### 1. Application Type
    - **Type of Application:** Setup an application in Auth0 of type SPA
@@ -75,6 +56,33 @@ To ensure the seamless integration of our application with Auth0, certain config
 - For browsers that are supported ([See](https://auth0.com/docs/get-started/applications/set-up-cors#browser-testing-support), you can use the crossOriginVerification method from the Auth0.js SDK in your application on a dedicated page to handle cases when third-party cookies are disabled. This value can be set in the application setting under **Cross-Origin Verification Fallback URL**. If your application is hosted at **app.example.com** this value can be something like **https://app.example.com/callback-cross-auth.html** where the html file contains the code for auth0's crossOriginVerification. See [auth0 doc](https://auth0.com/docs/get-started/applications/set-up-cors) for more details
 
 
+### Cross-Origin Authentication and Browser Compatibility
+
+#### Understanding Cross-Origin Authentication
+
+In this application, we utilize Auth0's Cross-Origin Authentication for functionalities like login, signup, and password change. Cross-Origin Authentication is mean to allow your application hosted on one domain to authenticate users against an Auth0 server on a different domain. This is however highly dependent on browser support.
+
+#### Browser Behavior and 3rd Party Cookies
+
+One critical aspect to consider when implementing Cross-Origin Authentication is the handling of 3rd party cookies by different browsers. Cross-Origin Authentication relies heavily on 3rd party cookies. These cookies are set by the Auth0 server (a different domain than the application) and are essential for maintaining the authentication state and session information.
+
+However, many modern browsers have implemented stricter privacy controls that block or restrict 3rd party cookies by default. This change in browser behavior can impact the functionality of Cross-Origin Authentication:
+
+- **Browsers Blocking 3rd Party Cookies:** In browsers where 3rd party cookies are completely blocked, Cross-Origin Authentication might fail, as the browser will not store the cookies set by Auth0, leading to a broken authentication flow.
+- **Browsers with Limited 3rd Party Cookie Use:** Some browsers may allow limited use of 3rd party cookies under specific conditions, but this still poses a risk for inconsistent user experience and potential authentication issues.
+
+#### Recommended Use Cases
+
+Given these limitations, it is generally advisable to use Cross-Origin Authentication in situations where both the application and the Auth0 identity provider are hosted under the same Top-Level Domain (TLD). This configuration can effectively bypass the restrictions on 3rd party cookies, as the cookies set by Auth0 would be considered first-party cookies, leading to a more stable and consistent authentication experience.
+
+For instance, if your application is hosted at `app.example.com` and Auth0 is at `auth.example.com`, they share the same TLD (`example.com`), which is a favorable setup for Cross-Origin Authentication.
+
+#### Alternative Approaches
+
+In scenarios where hosting both the application and Auth0 under the same TLD is not feasible, consider alternative authentication methods that do not rely on 3rd party cookies. These methods might include:
+
+- **Universal Login:** Redirecting users to the Auth0 hosted login page (Universal Login) instead of using embedded login forms on your site. This approach circumvents the issues with 3rd party cookies, as the authentication takes place entirely within the Auth0 domain.
+
 
 ## Usage
 
@@ -88,14 +96,6 @@ To ensure the seamless integration of our application with Auth0, certain config
 3. **Password Reset:**
    - Users can reset their password by clicking on the 'Change Password' link on the login page.
    - They need to provide their email address, and a password reset link will be sent to them.
-
-### Implementation of Cross-Origin Authentication in Our Sample
-
-In this sample application, we've implemented Auth0's Cross-Origin Authentication to manage user authentication. This method is crucial for the embedded login form experience, especially when our application and the Auth0 server are on different domains ( this will only work on browsers that allow 3rd party cookies).
-
-#### 1. User Login
-
-For the login functionality, the application posts the user's credentials to Auth0's `/co/authenticate` endpoint. This call returns a `login_ticket`, which is then used to build a URL for Auth0's `/authorize` endpoint using the auth0 spa js. The application then redirects the user to this URL, where Auth0 handles the authentication process. The `/co/authenticate` endpoint plays a vital role in our application. The response from this endpoint is crucial for proceeding with the authentication process.
 
 
 ## Configuration
@@ -133,11 +133,6 @@ webAuth.changePassword({
 });
 ```
 
-
-
-## Contributing
-
-Contributions to this project are welcome. Please ensure that your code adheres to the project's coding standards and include appropriate tests.
 
 ## License
 
