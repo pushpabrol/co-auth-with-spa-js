@@ -62,11 +62,11 @@ In scenarios where hosting both the application and Auth0 under the same TLD is 
 
 ### Implementation of Cross-Origin Authentication in Our Sample
 
-In this sample application, we've implemented Auth0's Cross-Origin Authentication to manage user authentication. This method is crucial for securely handling user credentials and sessions, especially when our application and the Auth0 server are on different domains. Below is an overview of how Cross-Origin Authentication is employed in various functionalities of our application:
+In this sample application, we've implemented Auth0's Cross-Origin Authentication to manage user authentication. This method is crucial for the embedded login form experience, especially when our application and the Auth0 server are on different domains ( this will only work on browsers that allow 3rd party cookies).
 
 #### 1. User Login
 
-For the login functionality, the application posts the user's credentials to Auth0's `/co/authenticate` endpoint. This call returns a `login_ticket`, which is then used to build a URL for Auth0's `/authorize` endpoint using the auth0 spa js. The application then redirects the user to this URL, where Auth0 handles the authentication process. The `/co/authenticate` endpoint plays a vital role in our application. It is the initial step in the Cross-Origin Authentication flow, where the application sends the user's credentials to Auth0. The response from this endpoint is crucial for proceeding with the authentication process.
+For the login functionality, the application posts the user's credentials to Auth0's `/co/authenticate` endpoint. This call returns a `login_ticket`, which is then used to build a URL for Auth0's `/authorize` endpoint using the auth0 spa js. The application then redirects the user to this URL, where Auth0 handles the authentication process. The `/co/authenticate` endpoint plays a vital role in our application. The response from this endpoint is crucial for proceeding with the authentication process.
 
 
 ## Configuration
