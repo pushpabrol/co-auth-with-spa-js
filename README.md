@@ -1,7 +1,3 @@
-Certainly! Below is a `README.md` file for your SPA solution using Auth0 for authentication, including login, signup, and password reset functionalities.
-
----
-
 # Single Page Application (SPA) with Auth0 Authentication
 
 This project is a Single Page Application (SPA) that implements user authentication using Auth0. It includes features for user login, signup, and password reset.
