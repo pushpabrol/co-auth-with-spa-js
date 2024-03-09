@@ -47,6 +47,35 @@ In scenarios where hosting both the application and Auth0 under the same TLD is 
 2. Place the source code in your web server's public directory.
 3. Ensure that the Auth0 configuration details are correctly set up in the application (domain, client ID, etc.).
 
+### Setting Up the Application in Auth0
+
+To ensure the seamless integration of our application with Auth0, certain configurations need to be set up in the Auth0 dashboard. These configurations include specifying callback URLs, logout URLs, web origins, CORS (Cross-Origin Resource Sharing), and Cross-Origin Authentication URLs. Below is a guide on how to set these up:
+
+#### 1. Application Type
+   - **Type of Application:** Setup an application in Auth0 of type SPA
+
+
+#### 2. Callback URLs
+
+- **Setup:** In your Auth0 dashboard, go to the settings of your application. Add the URLs of your application where you want users to be redirected after authentication in the **Callback URLs** field. if your application is hosted at **app.example.com** the callback url will be **https://app.example.com**
+
+#### 3. Logout URLs
+
+- **Setup:** In the same settings section, add the URLs where users should be redirected after logout in the **Logout URLs** field. If your application is hosted at **app.example.com** the logout url in this case will be **https://app.example.com**
+
+#### 4. Allowed Web Origins
+
+- **Setup:** Enter the URL of your application in the **Allowed Web Origins** field to enable CORS requests from your application.If your application is hosted at **app.example.com** this value will be **https://app.example.com**
+
+#### 5. Cross-Origin Authentication & URLS
+- **Setup:**
+- **Enable Cross-Origin Authentication**
+- Enter your application's URL in the **Allowed Origins(CORS)** to be able to post credentials from your application to auth0
+- Browsers like chrome, safari etc block 3rd party cookies and so cross origin auth will not work as explained above unless auth0 and the app are on the same top level domain.
+- For browsers that are supported ([See](https://auth0.com/docs/get-started/applications/set-up-cors#browser-testing-support), you can use the crossOriginVerification method from the Auth0.js SDK in your application on a dedicated page to handle cases when third-party cookies are disabled. This value can be set in the application setting under **Cross-Origin Verification Fallback URL**. If your application is hosted at **app.example.com** this value can be something like **https://app.example.com/callback-cross-auth.html** where the html file contains the code for auth0's crossOriginVerification. See [auth0 doc](https://auth0.com/docs/get-started/applications/set-up-cors) for more details
+
+
+
 ## Usage
 
 1. **User Login:**
@@ -104,6 +133,8 @@ webAuth.changePassword({
 });
 ```
 
+
+
 ## Contributing
 
 Contributions to this project are welcome. Please ensure that your code adheres to the project's coding standards and include appropriate tests.
@@ -112,6 +143,3 @@ Contributions to this project are welcome. Please ensure that your code adheres 
 
 This project is licensed under the MIT License.
 
----
-
-This README provides a basic overview of your project, including how to set it up and use it. You can expand each section with more detailed information as necessary, especially under the "Configuration" section, to provide specific instructions based on how your application is set up in Auth0.
